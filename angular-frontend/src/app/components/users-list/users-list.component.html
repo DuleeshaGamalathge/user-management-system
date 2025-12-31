@@ -1,0 +1,9 @@
+<div class="container">
+    <h2>Users List</h2>
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let user of users">
+        {{ user.id }} - {{ user.name }} ({{ user.email }})
+      </li>
+    </ul>
+</div>
+  

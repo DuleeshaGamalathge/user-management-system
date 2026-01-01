@@ -17,4 +17,13 @@ public class UsersController : ControllerBase
     {
         return Ok(Users);
     }
+    
+    [HttpPost]
+    public IActionResult CreateUser(User newUser)
+    {
+        newUser.Id = Users.Count + 1; // simple ID generation
+        Users.Add(newUser);
+        return Ok(newUser);
+    }
+
 }

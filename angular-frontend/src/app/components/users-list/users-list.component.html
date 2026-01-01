@@ -6,4 +6,26 @@
       </li>
     </ul>
 </div>
-  
+
+
+<div class="container mt-5">
+  <h3>Add User</h3>
+
+  <input
+    type="text"
+    placeholder="Name"
+    [(ngModel)]="newUser.name"
+  />
+
+  <input
+    type="email"
+    placeholder="Email"
+    [(ngModel)]="newUser.email"
+  />
+
+  <button (click)="addUser()">Add User</button>
+
+  <hr />
+
+</div>
+

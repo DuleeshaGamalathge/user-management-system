@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService, User } from '../../services/user.service';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-users-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
 //   template: `
@@ -30,5 +31,21 @@ export class UsersListComponent implements OnInit{
     });
   }
   
-
+  //add new user
+  newUser: User = {
+    id: 0,
+    name: '',
+    email: ''
+  };
+  
+  addUser() {
+    this.userService.addUser(this.newUser).subscribe({
+      next: (createdUser) => {
+        this.users.push(createdUser); // update UI instantly
+        this.newUser = { id: 0, name: '', email: '' }; // reset form
+      },
+      error: (err) => console.error('Add user failed', err)
+    });
+  }
+  
 }

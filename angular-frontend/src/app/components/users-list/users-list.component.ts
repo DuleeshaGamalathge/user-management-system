@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService, User } from '../../services/user.service';
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-users-list',
@@ -21,15 +21,17 @@ export class UsersListComponent implements OnInit{
 
   constructor(private userService: UserService) {}
 
-  ngOnInit(): void {
+  //load users
+  loadUsers() {
     this.userService.getUsers().subscribe({
-      next: data => {
-        console.log('Users from API:', data);
-        this.users = data;
-      },
-      error: err => console.error('API error:', err)
+      next: (data) => this.users = data,
+      error: (err) => console.error(err)
     });
   }
+
+  ngOnInit(): void {
+    this.loadUsers();
+  }  
   
   //add new user
   newUser: User = {
@@ -59,5 +61,27 @@ export class UsersListComponent implements OnInit{
       }
     });
   }
+
+  //update user
+  selectedUser: User | null = null;
+
+  editUser(user: User) {
+    this.selectedUser = { ...user }; // copy, not reference
+  }
+  
+  
+  updateUser() {
+    if (!this.selectedUser) return;
+  
+    this.userService.updateUser(this.selectedUser.id, this.selectedUser)
+      .subscribe({
+        next: () => {
+          this.loadUsers();      // refresh list
+          this.selectedUser = null;
+        },
+        error: (err) => console.error(err)
+      });
+  }
+  
    
 }

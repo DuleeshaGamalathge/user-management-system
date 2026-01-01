@@ -3,12 +3,13 @@
     <ul class="list-group">
       <li class="list-group-item" *ngFor="let user of users">
         {{ user.id }} - {{ user.name }} ({{ user.email }})
+        <button (click)="editUser(user)">Edit</button>
         <button (click)="deleteUser(user.id)">Delete</button>
       </li>
     </ul>
 </div>
 
-
+<!-- add user form  -->
 <div class="container mt-5">
   <h3>Add User</h3>
 
@@ -30,3 +31,22 @@
 
 </div>
 
+<!-- edit form -->
+<div *ngIf="selectedUser">
+  <h3>Edit User</h3>
+
+  <input
+    type="text"
+    [(ngModel)]="selectedUser.name"
+    placeholder="Name"
+  />
+
+  <input
+    type="email"
+    [(ngModel)]="selectedUser.email"
+    placeholder="Email"
+  />
+
+  <button (click)="updateUser()">Save</button>
+  <button (click)="selectedUser = null">Cancel</button>
+</div>

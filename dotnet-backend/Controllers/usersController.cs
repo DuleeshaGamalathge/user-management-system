@@ -40,4 +40,20 @@ public class UsersController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id}")]
+    public IActionResult UpdateUser(int id, User updatedUser)
+    {
+        var user = Users.FirstOrDefault(u => u.Id == id);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        user.Name = updatedUser.Name;
+        user.Email = updatedUser.Email;
+
+        return Ok(user);
+    }
+
 }

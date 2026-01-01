@@ -24,4 +24,8 @@ export class UserService {
     return this.http.post<User>(this.apiUrl, user);
   }
   
+  deleteUser(id: number) {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+  
 }

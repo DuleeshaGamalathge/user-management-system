@@ -34,21 +34,21 @@ export class UsersListComponent implements OnInit{
   }  
   
   //add new user
-  newUser: User = {
-    id: 0,
-    name: '',
-    email: ''
-  };
+  // newUser: User = {
+  //   id: 0,
+  //   name: '',
+  //   email: ''
+  // };
   
-  addUser() {
-    this.userService.addUser(this.newUser).subscribe({
-      next: (createdUser) => {
-        this.users.push(createdUser); // update UI instantly
-        this.newUser = { id: 0, name: '', email: '' }; // reset form
-      },
-      error: (err) => console.error('Add user failed', err)
-    });
-  }
+  // addUser() {
+  //   this.userService.addUser(this.newUser).subscribe({
+  //     next: (createdUser) => {
+  //       this.users.push(createdUser); // update UI instantly
+  //       this.newUser = { id: 0, name: '', email: '' }; // reset form
+  //     },
+  //     error: (err) => console.error('Add user failed', err)
+  //   });
+  // }
   
   //delete user
   deleteUser(id: number) {
@@ -63,24 +63,78 @@ export class UsersListComponent implements OnInit{
   }
 
   //update user
+  // selectedUser: User | null = null;
+
+  // editUser(user: User) {
+  //   this.selectedUser = { ...user }; // copy, not reference
+  // }
+  
+  
+  // updateUser() {
+  //   if (!this.selectedUser) return;
+  
+  //   this.userService.updateUser(this.selectedUser.id, this.selectedUser)
+  //     .subscribe({
+  //       next: () => {
+  //         this.loadUsers();      // refresh list
+  //         this.selectedUser = null;
+  //       },
+  //       error: (err) => console.error(err)
+  //     });
+  // }
+
+  //save user
   selectedUser: User | null = null;
+  isEditMode = false;
+
+  userFormModel: User = {
+    id: 0,
+    name: '',
+    email: ''
+  };
 
   editUser(user: User) {
-    this.selectedUser = { ...user }; // copy, not reference
+    this.userFormModel = { ...user }; // copy
+    this.isEditMode = true;
+  }
+
+  //reset form
+  resetForm(form: any) {
+    form.resetForm();
+    this.userFormModel = { id: 0, name: '', email: '' };
+    this.isEditMode = false;
+  }
+
+  cancelEdit(form: any) {
+    this.resetForm(form);
   }
   
-  
-  updateUser() {
-    if (!this.selectedUser) return;
-  
-    this.userService.updateUser(this.selectedUser.id, this.selectedUser)
+
+  saveUser(form: any){
+    if (form.invalid) return;
+
+    if (this.isEditMode){
+      //update
+      this.userService
+      .updateUser(this.userFormModel.id, this.userFormModel)
       .subscribe({
         next: () => {
-          this.loadUsers();      // refresh list
-          this.selectedUser = null;
+          this.loadUsers();
+          this.resetForm(form);
         },
-        error: (err) => console.error(err)
+        error: (err) => console.error('Update failed', err)
       });
+    } else {
+      //create
+      this.userService.addUser(this.userFormModel).subscribe({
+        next: (createdUser) => {
+          this.users.push(createdUser);
+          this.resetForm(form);
+        },
+        error: (err) => console.error('Add failed', err)
+      });
+    }    
+    
   }
   
    

@@ -1,12 +1,32 @@
 <div class="container">
     <h2>Users List</h2>
-    <ul class="list-group">
-      <li class="list-group-item" *ngFor="let user of users">
-        {{ user.id }} - {{ user.name }} ({{ user.email }})
-        <button (click)="editUser(user)">Edit</button>
-        <button (click)="deleteUser(user.id)">Delete</button>
-      </li>
-    </ul>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th style="width: 200px;">Actions</th>
+        </tr>
+      </thead>
+    
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <button class="btn btn-sm btn-primary me-2"
+                    (click)="editUser(user)">
+              Edit
+            </button>
+    
+            <button class="btn btn-sm btn-danger"
+                    (click)="deleteUser(user.id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>    
 </div>
 
 <!-- add user form  -->
@@ -32,21 +52,24 @@
 </div>
 
 <!-- edit form -->
-<div *ngIf="selectedUser">
-  <h3>Edit User</h3>
+<div *ngIf="selectedUser" class="card mt-4 p-3">
+  <h5>Edit User</h5>
 
-  <input
-    type="text"
-    [(ngModel)]="selectedUser.name"
-    placeholder="Name"
-  />
+  <div class="mb-2">
+    <input class="form-control"
+           [(ngModel)]="selectedUser.name"
+           placeholder="Name" />
+  </div>
 
-  <input
-    type="email"
-    [(ngModel)]="selectedUser.email"
-    placeholder="Email"
-  />
+  <div class="mb-2">
+    <input class="form-control"
+           [(ngModel)]="selectedUser.email"
+           placeholder="Email" />
+  </div>
 
-  <button (click)="updateUser()">Save</button>
-  <button (click)="selectedUser = null">Cancel</button>
+  <div class="d-flex gap-2">
+      <button type="button" class="btn btn-success me-2" (click)="updateUser()">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="selectedUser = null">Cancel</button>
+  </div>
 </div>
+

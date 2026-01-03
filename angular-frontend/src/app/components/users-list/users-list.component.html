@@ -43,27 +43,45 @@
     type="text"
     name="name"
     [(ngModel)]="selectedUser.name"
-    placeholder="Name"
     required
+    #name="ngModel"
+    class="form-control"
+    placeholder="Name"
   />
 
-
-  <div class="error" *ngIf="validationErrors?.Name">
-    {{ validationErrors.Name[0] }}
+  <div class="text-danger" *ngIf="name.invalid && name.touched">
+    Name is required
   </div>
+  
+
+  <!-- <div class="error" *ngIf="validationErrors?.Name">
+    {{ validationErrors.Name[0] }}
+  </div> -->
 
   <!-- email -->
   <input
-    type="text"
+    type="email"
     name="email"
     [(ngModel)]="selectedUser.email"
-    placeholder="Email"
     required
+    email
+    #email="ngModel"
+    class="form-control"
+    placeholder="Email"
   />
 
-  <div class="error" *ngIf="validationErrors?.Email">
-    {{ validationErrors.Email[0] }}
+  <div class="text-danger" *ngIf="email.invalid && email.touched">
+    <div *ngIf="email.errors?.['required']">
+      Email is required
+    </div>
+    <div *ngIf="email.errors?.['email']">
+      Invalid email format
+    </div>
   </div>
+  
+  <!-- <div class="error" *ngIf="validationErrors?.Email">
+    {{ validationErrors.Email[0] }}
+  </div> -->
 
 
   <button class="btn ms-3"

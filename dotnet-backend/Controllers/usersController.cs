@@ -19,8 +19,13 @@ public class UsersController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult CreateUser(User newUser)
+    public IActionResult CreateUser([FromBody] User newUser)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         newUser.Id = Users.Count + 1; // simple ID generation
         Users.Add(newUser);
         return Ok(newUser);
@@ -43,6 +48,11 @@ public class UsersController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult UpdateUser(int id, User updatedUser)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         var user = Users.FirstOrDefault(u => u.Id == id);
 
         if (user == null)

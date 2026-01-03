@@ -9,12 +9,6 @@ import { FormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css'
-//   template: `
-//   <h2>Users List</h2>
-//   <ul>
-//     <li *ngFor="let user of users">{{ user.name }} - {{ user.email }}</li>
-//   </ul>
-// `
 })
 export class UsersListComponent implements OnInit{
   users: User[] = [];
@@ -33,23 +27,6 @@ export class UsersListComponent implements OnInit{
     this.loadUsers();
   }  
   
-  //add new user
-  // newUser: User = {
-  //   id: 0,
-  //   name: '',
-  //   email: ''
-  // };
-  
-  // addUser() {
-  //   this.userService.addUser(this.newUser).subscribe({
-  //     next: (createdUser) => {
-  //       this.users.push(createdUser); // update UI instantly
-  //       this.newUser = { id: 0, name: '', email: '' }; // reset form
-  //     },
-  //     error: (err) => console.error('Add user failed', err)
-  //   });
-  // }
-  
   //delete user
   deleteUser(id: number) {
     this.userService.deleteUser(id).subscribe({
@@ -62,80 +39,61 @@ export class UsersListComponent implements OnInit{
     });
   }
 
-  //update user
-  // selectedUser: User | null = null;
-
-  // editUser(user: User) {
-  //   this.selectedUser = { ...user }; // copy, not reference
-  // }
-  
-  
-  // updateUser() {
-  //   if (!this.selectedUser) return;
-  
-  //   this.userService.updateUser(this.selectedUser.id, this.selectedUser)
-  //     .subscribe({
-  //       next: () => {
-  //         this.loadUsers();      // refresh list
-  //         this.selectedUser = null;
-  //       },
-  //       error: (err) => console.error(err)
-  //     });
-  // }
-
-  //save user
+  // add | update user
   selectedUser: User | null = null;
-  isEditMode = false;
 
-  userFormModel: User = {
-    id: 0,
-    name: '',
-    email: ''
-  };
-
+  //update user
   editUser(user: User) {
-    this.userFormModel = { ...user }; // copy
-    this.isEditMode = true;
-  }
-
-  //reset form
-  resetForm(form: any) {
-    form.resetForm();
-    this.userFormModel = { id: 0, name: '', email: '' };
-    this.isEditMode = false;
+    this.selectedUser = { ...user }; // copy, not reference
   }
 
   cancelEdit(form: any) {
-    this.resetForm(form);
+    this.selectedUser = null;
   }
   
+  //add user
+  addNewUser(){
+    this.selectedUser = {
+      id: 0,
+      name: '',
+      email: ''
+    };
+  }
+  
+  //validation error
 
+  validationErrors: any = {}; //store backend error messages
+
+  handleError(err: any) {
+    if (err.status === 400 && err.error?.errors) {
+      this.validationErrors = err.error.errors;
+    } else {
+      console.error(err);
+    }
+  }
+  
+  //save user
   saveUser(form: any){
-    if (form.invalid) return;
+    if (form.invalid || !this.selectedUser) return;
 
-    if (this.isEditMode){
-      //update
-      this.userService
-      .updateUser(this.userFormModel.id, this.userFormModel)
-      .subscribe({
-        next: () => {
-          this.loadUsers();
-          this.resetForm(form);
+    if (this.selectedUser.id === 0){
+      //create
+      this.userService.addUser(this.selectedUser).subscribe({
+        next: (created) => {
+          this.users.push(created);
+          this.selectedUser = null;
         },
-        error: (err) => console.error('Update failed', err)
+        error: (err) => this.handleError(err)
       });
     } else {
-      //create
-      this.userService.addUser(this.userFormModel).subscribe({
-        next: (createdUser) => {
-          this.users.push(createdUser);
-          this.resetForm(form);
+      //update
+      this.userService.updateUser(this.selectedUser.id, this.selectedUser).subscribe({
+        next: () => {
+          this.loadUsers();
+          this.selectedUser = null;
         },
-        error: (err) => console.error('Add failed', err)
+        error: (err) => this.handleError(err)
       });
     }    
-    
-  }
-  
-   
+  }   
 }

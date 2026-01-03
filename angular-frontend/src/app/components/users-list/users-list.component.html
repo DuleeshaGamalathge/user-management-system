@@ -29,95 +29,55 @@
     </table>    
 </div>
 
-<!-- Save user form  -->
-<form #userForm="ngForm" (ngSubmit)="saveUser(userForm)">
+<!-- add user button -->
+<button class="btn btn-primary mb-3" (click)="addNewUser()">
+  Add User
+</button>
 
+
+<!-- Save user form  -->
+<form *ngIf="selectedUser" #userForm="ngForm" (ngSubmit)="saveUser(userForm)">
+
+  <!-- name -->
   <input
     type="text"
     name="name"
-    [(ngModel)]="userFormModel.name"
-    required
-    #name="ngModel"
-    class="form-control"
+    [(ngModel)]="selectedUser.name"
     placeholder="Name"
-  />
-
-  <div *ngIf="name.invalid && name.touched" class="text-danger">
-    Name is required
-  </div>
-
-  <input
-    type="email"
-    name="email"
-    [(ngModel)]="userFormModel.email"
     required
-    email
-    #email="ngModel"
-    class="form-control mt-2"
-    placeholder="Email"
   />
 
-  <div *ngIf="email.invalid && email.touched" class="text-danger">
-    Valid email is required
+
+  <div class="error" *ngIf="validationErrors?.Name">
+    {{ validationErrors.Name[0] }}
   </div>
 
-  <button class="btn mt-3"
-          [ngClass]="isEditMode ? 'btn-success' : 'btn-primary'"
+  <!-- email -->
+  <input
+    type="text"
+    name="email"
+    [(ngModel)]="selectedUser.email"
+    placeholder="Email"
+    required
+  />
+
+  <div class="error" *ngIf="validationErrors?.Email">
+    {{ validationErrors.Email[0] }}
+  </div>
+
+
+  <button class="btn ms-3"
+          [ngClass]="selectedUser ? 'btn-success' : 'btn-primary'"
           [disabled]="userForm.invalid">
-    {{ isEditMode ? 'Update User' : 'Add User' }}
+    {{ selectedUser ? 'Update User' : 'Add User' }}
   </button>
 
-  <button *ngIf="isEditMode"
+  <button *ngIf="selectedUser"
           type="button"
-          class="btn btn-secondary mt-3 ms-2"
+          class="btn btn-secondary ms-2"
           (click)="cancelEdit(userForm)">
     Cancel
   </button>
 
 </form>
-
-
-<!-- add user form  -->
-<!-- <div class="container mt-5">
-  <h3>Add User</h3>
-
-  <input
-    type="text"
-    placeholder="Name"
-    [(ngModel)]="newUser.name"
-  />
-
-  <input
-    type="email"
-    placeholder="Email"
-    [(ngModel)]="newUser.email"
-  />
-
-  <button (click)="addUser()">Add User</button>
-
-  <hr />
-
-</div> -->
-
-<!-- edit form -->
-<!-- <div *ngIf="selectedUser" class="card mt-4 p-3">
-  <h5>Edit User</h5>
-
-  <div class="mb-2">
-    <input class="form-control"
-           [(ngModel)]="selectedUser.name"
-           placeholder="Name" />
-  </div>
-
-  <div class="mb-2">
-    <input class="form-control"
-           [(ngModel)]="selectedUser.email"
-           placeholder="Email" />
-  </div>
-
-  <div class="d-flex gap-2">
-      <button type="button" class="btn btn-success me-2" (click)="updateUser()">Save</button>
-      <button type="button" class="btn btn-secondary" (click)="selectedUser = null">Cancel</button>
-  </div>
-</div> -->
 

@@ -14,12 +14,12 @@
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>
-            <button class="btn btn-sm btn-primary me-2"
+            <button type="button" class="btn btn-sm btn-primary me-2"
                     (click)="editUser(user)">
               Edit
             </button>
     
-            <button class="btn btn-sm btn-danger"
+            <button type="button" class="btn btn-sm btn-danger"
                     (click)="deleteUser(user.id)">
               Delete
             </button>
@@ -30,19 +30,19 @@
 </div>
 
 <!-- add user button -->
-<button class="btn btn-primary mb-3" (click)="addNewUser()">
+<button type="button" class="btn btn-primary mb-3" (click)="addNewUser()">
   Add User
 </button>
 
 
 <!-- Save user form  -->
-<form *ngIf="selectedUser" #userForm="ngForm" (ngSubmit)="saveUser(userForm)">
+<form *ngIf="formUser" #userForm="ngForm" (ngSubmit)="saveUser(userForm)">
 
   <!-- name -->
   <input
     type="text"
     name="name"
-    [(ngModel)]="selectedUser.name"
+    [(ngModel)]="formUser.name"
     required
     #name="ngModel"
     class="form-control"
@@ -62,7 +62,7 @@
   <input
     type="email"
     name="email"
-    [(ngModel)]="selectedUser.email"
+    [(ngModel)]="formUser.email"
     required
     email
     #email="ngModel"
@@ -83,17 +83,24 @@
     {{ validationErrors.Email[0] }}
   </div> -->
 
-
+  <div *ngIf="apiError" class="alert alert-danger">
+    {{ apiError }}
+  </div>
+  
   <button class="btn ms-3"
-          [ngClass]="selectedUser ? 'btn-success' : 'btn-primary'"
+          [ngClass]="isEditMode ? 'btn-success' : 'btn-primary'"
           [disabled]="userForm.invalid">
-    {{ selectedUser ? 'Update User' : 'Add User' }}
+    {{ isEditMode ? 'Update User' : 'Add User' }}
   </button>
 
-  <button *ngIf="selectedUser"
+  <div *ngIf="apiError" class="alert alert-danger">
+    {{ apiError }}
+  </div>
+  
+  <button *ngIf="formUser"
           type="button"
           class="btn btn-secondary ms-2"
-          (click)="cancelEdit(userForm)">
+          (click)="cancel()">
     Cancel
   </button>
 

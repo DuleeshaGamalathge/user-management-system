@@ -21,12 +21,16 @@ public class UsersController : ControllerBase
     [HttpPost]
     public IActionResult CreateUser([FromBody] User newUser)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (string.IsNullOrWhiteSpace(newUser.Name))
+            return BadRequest("Name is required");
 
-        newUser.Id = Users.Count + 1; // simple ID generation
+        if (string.IsNullOrWhiteSpace(newUser.Email))
+            return BadRequest("Email is required");
+
+        if (Users.Any(u => u.Email == newUser.Email))
+            return BadRequest("Email already exists");
+
+        newUser.Id = Users.Max(u => u.Id) + 1;
         Users.Add(newUser);
         return Ok(newUser);
     }
@@ -48,19 +52,14 @@ public class UsersController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult UpdateUser(int id, User updatedUser)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        
         var user = Users.FirstOrDefault(u => u.Id == id);
-
         if (user == null)
-        {
-            return NotFound();
-        }
+            return NotFound("User not found");
 
-        user.Name = updatedUser.Name;
+        if (Users.Any(u => u.Email == updatedUser.Email && u.Id != id))
+            return BadRequest("Email already exists");
+
+        user.Name = updatedUser.Name; 
         user.Email = updatedUser.Email;
 
         return Ok(user);

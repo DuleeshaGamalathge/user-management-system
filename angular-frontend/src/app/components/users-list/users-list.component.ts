@@ -40,29 +40,41 @@ export class UsersListComponent implements OnInit{
   }
 
   // add | update user
+  formUser: User = {
+    id: 0,
+    name: '',
+    email: ''
+  };
+  
+  isEditMode = false;
+
   selectedUser: User | null = null;
 
   //update user
   editUser(user: User) {
-    this.selectedUser = { ...user }; // copy, not reference
+    this.formUser = { ...user }; // copy, not reference
+    this.isEditMode = true;
   }
 
-  cancelEdit(form: any) {
-    this.selectedUser = null;
+  cancel() {
+    this.formUser = { id: 0, name: '', email: '' };
+    this.isEditMode = false;
   }
   
   //add user
   addNewUser(){
-    this.selectedUser = {
+    this.formUser = {
       id: 0,
       name: '',
       email: ''
     };
+    this.isEditMode = false;
   }
   
   //validation error
 
   validationErrors: any = {}; //store backend error messages
+  apiError: string | null = null;
 
   handleError(err: any) {
     if (err.status === 400 && err.error?.errors) {
@@ -73,27 +85,27 @@ export class UsersListComponent implements OnInit{
   }
   
   //save user
-  saveUser(form: any){
-    if (form.invalid || !this.selectedUser) return;
-
-    if (this.selectedUser.id === 0){
-      //create
-      this.userService.addUser(this.selectedUser).subscribe({
-        next: (created) => {
-          this.users.push(created);
-          this.selectedUser = null;
-        },
-        error: (err) => this.handleError(err)
-      });
-    } else {
-      //update
-      this.userService.updateUser(this.selectedUser.id, this.selectedUser).subscribe({
-        next: () => {
-          this.loadUsers();
-          this.selectedUser = null;
-        },
-        error: (err) => this.handleError(err)
-      });
-    }    
-  }   
+  saveUser(form: any) {
+    if (form.invalid) return;
+  
+    this.apiError = null; // clear previous errors
+  
+    const request$ = this.isEditMode
+      ? this.userService.updateUser(this.formUser.id, this.formUser)
+      : this.userService.addUser(this.formUser);
+  
+    request$.subscribe({
+      next: () => {
+        this.loadUsers();
+        this.cancel
+        
+        ();
+        form.resetForm();
+      },
+      error: (err) => {
+        this.apiError = err.error || 'Something went wrong';
+      }
+    });
+  }
+    
 }

@@ -15,10 +15,22 @@ export class UsersListComponent implements OnInit{
 
   constructor(private userService: UserService) {}
 
+  //add loading status
+  isLoading = false;
+  isSaving = false;
+  isDeleting = false;
+  errorMessage = '';
+
   //load users
   loadUsers() {
+    this.isLoading = true;
+    this.errorMessage = '';
+
     this.userService.getUsers().subscribe({
-      next: (data) => this.users = data,
+      next: (data) => {
+        this.users = data;
+        this.isLoading = false;
+      },
       error: (err) => console.error(err)
     });
   }
@@ -87,6 +99,8 @@ export class UsersListComponent implements OnInit{
   //save user
   saveUser(form: any) {
     if (form.invalid) return;
+
+    this.isSaving = true;
   
     this.apiError = null; // clear previous errors
   
@@ -97,11 +111,10 @@ export class UsersListComponent implements OnInit{
     request$.subscribe({
       next: () => {
         this.loadUsers();
-        this.cancel
-        
-        ();
+        this.cancel();
+        this.isSaving = false;
         form.resetForm();
-      },
+      }, 
       error: (err) => {
         this.apiError = err.error || 'Something went wrong';
       }

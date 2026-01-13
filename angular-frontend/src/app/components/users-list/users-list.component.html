@@ -1,5 +1,9 @@
 <div class="container">
     <h2>Users List</h2>
+    <div *ngIf="isLoading" class="alert alert-info">
+      Loading users...
+    </div>
+    
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
@@ -89,8 +93,11 @@
   
   <button class="btn ms-3"
           [ngClass]="isEditMode ? 'btn-success' : 'btn-primary'"
-          [disabled]="userForm.invalid">
-    {{ isEditMode ? 'Update User' : 'Add User' }}
+          [disabled]="userForm.invalid || isSaving">
+    {{isSaving
+        ? 'Saving...'
+        : ( isEditMode ? 'Update User' : 'Add User' )
+    }}
   </button>
 
   <div *ngIf="apiError" class="alert alert-danger">

@@ -34,7 +34,7 @@
 </div>
 
 <!-- add user button -->
-<button type="button" class="btn btn-primary mb-3" (click)="addNewUser()">
+<button type="button" class="btn btn-primary mb-3" [disabled]="isEditMode" (click)="addNewUser()">
   Add User
 </button>
 
@@ -56,11 +56,6 @@
   <div class="text-danger" *ngIf="name.invalid && name.touched">
     Name is required
   </div>
-  
-
-  <!-- <div class="error" *ngIf="validationErrors?.Name">
-    {{ validationErrors.Name[0] }}
-  </div> -->
 
   <!-- email -->
   <input
@@ -82,15 +77,12 @@
       Invalid email format
     </div>
   </div>
-  
-  <!-- <div class="error" *ngIf="validationErrors?.Email">
-    {{ validationErrors.Email[0] }}
-  </div> -->
 
   <div *ngIf="apiError" class="alert alert-danger">
     {{ apiError }}
   </div>
   
+  <!-- save -->
   <button class="btn ms-3"
           [ngClass]="isEditMode ? 'btn-success' : 'btn-primary'"
           [disabled]="userForm.invalid || isSaving">
@@ -99,11 +91,8 @@
         : ( isEditMode ? 'Update User' : 'Add User' )
     }}
   </button>
-
-  <div *ngIf="apiError" class="alert alert-danger">
-    {{ apiError }}
-  </div>
   
+  <!-- cancel -->
   <button *ngIf="formUser"
           type="button"
           class="btn btn-secondary ms-2"

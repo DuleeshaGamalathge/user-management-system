@@ -11,15 +11,24 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './users-list.component.css'
 })
 export class UsersListComponent implements OnInit{
-  users: User[] = [];
-
   constructor(private userService: UserService) {}
 
-  //add loading status
+  //Data
+  users: User[] = [];
+
+  //UI status
   isLoading = false;
   isSaving = false;
   isDeleting = false;
+  isEditMode = false;
   errorMessage = '';
+
+  // define user for add | update user
+  formUser: User = {
+    id: 0,
+    name: '',
+    email: ''
+  };
 
   //load users
   loadUsers() {
@@ -35,12 +44,15 @@ export class UsersListComponent implements OnInit{
     });
   }
 
+  //Load users when page open
   ngOnInit(): void {
     this.loadUsers();
   }  
   
   //delete user
   deleteUser(id: number) {
+    if (!confirm('Are you sure you want to delete this user?')) return;
+
     this.userService.deleteUser(id).subscribe({
       next: () => {
         this.users = this.users.filter(user => user.id !== id);
@@ -51,23 +63,15 @@ export class UsersListComponent implements OnInit{
     });
   }
 
-  // add | update user
-  formUser: User = {
-    id: 0,
-    name: '',
-    email: ''
-  };
-  
-  isEditMode = false;
-
-  selectedUser: User | null = null;
-
   //update user
+
+  //switch form into edit mode
   editUser(user: User) {
     this.formUser = { ...user }; // copy, not reference
     this.isEditMode = true;
   }
 
+  //reset form
   cancel() {
     this.formUser = { id: 0, name: '', email: '' };
     this.isEditMode = false;
@@ -87,21 +91,12 @@ export class UsersListComponent implements OnInit{
 
   validationErrors: any = {}; //store backend error messages
   apiError: string | null = null;
-
-  handleError(err: any) {
-    if (err.status === 400 && err.error?.errors) {
-      this.validationErrors = err.error.errors;
-    } else {
-      console.error(err);
-    }
-  }
   
   //save user
   saveUser(form: any) {
-    if (form.invalid) return;
+    if (form.invalid || this.isSaving) return;
 
-    this.isSaving = true;
-  
+    this.isSaving = true;  
     this.apiError = null; // clear previous errors
   
     const request$ = this.isEditMode
@@ -117,6 +112,7 @@ export class UsersListComponent implements OnInit{
       }, 
       error: (err) => {
         this.apiError = err.error || 'Something went wrong';
+        this.isSaving = false;
       }
     });
   }

@@ -31,3 +31,10 @@ E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\bin\Debug\net7.0\dotnet-
 E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\bin\Debug\net7.0\dotnet-backend.pdb
 E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\obj\Debug\net7.0\dotnet-backend.genruntimeconfig.cache
 E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\obj\Debug\net7.0\ref\dotnet-backend.dll
+E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.dll
+E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+E:\COD\Angular+.NET\UserManagementSystem\dotnet-backend\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll

@@ -21,6 +21,12 @@ export class LoginComponent {
     private router: Router
   ) {}
 
+  ngOnInit() {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
+    }
+  }
+  
   login() {
     this.authService.login(this.email, this.password).subscribe({
       next: () => {

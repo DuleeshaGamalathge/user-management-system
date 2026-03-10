@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UsersListComponent } from './components/users-list/users-list.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -13,4 +14,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 })
 export class AppComponent {
   title = 'angular-frontend';
+
+  constructor(public authService: AuthService) {}
 }

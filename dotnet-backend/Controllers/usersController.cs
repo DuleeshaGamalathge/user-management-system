@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
+using dotnet_backend.Models;
 
 namespace dotnet_backend.Controllers{
     [Authorize]

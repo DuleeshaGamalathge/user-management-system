@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace dotnet_backend.Models;
+
 public class User
 {
     public int Id { get; set; }
@@ -11,4 +13,9 @@ public class User
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid email format")]
     public string Email { get; set; } = string.Empty;
+
+    [Required]
+    public string Password { get; set; } = string.Empty;
+
+    public string Role { get; set; } = "User";
 }

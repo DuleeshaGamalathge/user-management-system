@@ -27,7 +27,9 @@ export class UsersListComponent implements OnInit{
   formUser: User = {
     id: 0,
     name: '',
-    email: ''
+    email: '',
+    password: '',
+    role: 'User'
   };
 
   //load users
@@ -73,7 +75,7 @@ export class UsersListComponent implements OnInit{
 
   //reset form
   cancel() {
-    this.formUser = { id: 0, name: '', email: '' };
+    this.formUser = { id: 0, name: '', email: '', password: '', role: '' };
     this.isEditMode = false;
   }
   
@@ -82,7 +84,9 @@ export class UsersListComponent implements OnInit{
     this.formUser = {
       id: 0,
       name: '',
-      email: ''
+      email: '',
+      password: '',
+      role: ''
     };
     this.isEditMode = false;
   }

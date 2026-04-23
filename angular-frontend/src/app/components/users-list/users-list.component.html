@@ -78,6 +78,21 @@
     </div>
   </div>
 
+  <!-- password -->
+  <input
+    type="text"
+    name="password"
+    [(ngModel)]="formUser.password"
+    required
+    #name="ngModel"
+    class="form-control"
+    placeholder="Password"
+  />
+
+  <!-- <div class="text-danger" *ngIf="password.invalid && password.touched">
+    Password is required
+  </div> -->
+
   <div *ngIf="apiError" class="alert alert-danger">
     {{ apiError }}
   </div>

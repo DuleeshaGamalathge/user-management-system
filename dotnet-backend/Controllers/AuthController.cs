@@ -26,11 +26,19 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(LoginRequest request)
     {
         var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == request.Email && u.Password == request.Password);
+                .FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null)
                 return Unauthorized("Invalid credentials");
 
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(
+                request.Password,
+                user.Password
+            );
+
+            if (!isPasswordValid)
+                return Unauthorized("Invalid credentials");
+            
             var token = GenerateJwtToken(user);
 
             return Ok(new { token });

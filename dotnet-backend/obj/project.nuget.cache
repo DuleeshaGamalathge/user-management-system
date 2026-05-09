@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "QDCtntOxnePEBHNFOqlVtppFiNvxnxx7ybazY3yD/dwg8dAaDF/AfhvMMlRDwt/ka1y2WIWLctz7cO/0lIqDqQ==",
+  "dgSpecHash": "P3x10EKBIOGS8St5jLqPIfB+qmwPcbXaRrQGwcE3DpYkdoFft+RrxRx+W+hs8UbRqfQDJCUfCwSvcooXs5mfHw==",
   "success": true,
   "projectFilePath": "E:\\COD\\Angular+.NET\\UserManagementSystem\\dotnet-backend\\dotnet-backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\USER\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\7.0.10\\microsoft.aspnetcore.authentication.jwtbearer.7.0.10.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.10\\microsoft.aspnetcore.openapi.7.0.10.nupkg.sha512",

@@ -39,6 +39,9 @@ namespace dotnet_backend.Controllers{
             if (existingUser)
                 return BadRequest("Email already exists");
 
+            // Hash password
+            newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
+            
             // Save user
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();

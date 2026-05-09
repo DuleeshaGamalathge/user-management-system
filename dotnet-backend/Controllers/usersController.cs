@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using dotnet_backend.Models;
+using dotnet_backend.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace dotnet_backend.Controllers{
     [Authorize]
@@ -9,62 +11,77 @@ namespace dotnet_backend.Controllers{
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private static List<User> Users = new List<User>
+        private readonly AppDbContext _context;
+
+        public UsersController(AppDbContext context)
         {
-            new User { Id = 1, Name = "Duleesha Rashmi", Email = "duleesha@example.com" },
-            new User { Id = 2, Name = "Alice", Email = "alice@example.com" },
-            new User { Id = 3, Name = "Bob", Email = "bob@example.com" }
-        };
+            _context = context;
+        }
 
         [HttpGet]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            return Ok(Users);
+            var users = await _context.Users.ToListAsync();
+            return Ok(users);
         }
         
         [HttpPost]
-        public IActionResult CreateUser([FromBody] User newUser)
+        public async Task<IActionResult> CreateUser(User newUser)
         {
-            if (string.IsNullOrWhiteSpace(newUser.Name))
-                return BadRequest("Name is required");
+            //validation
+            if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-            if (string.IsNullOrWhiteSpace(newUser.Email))
-                return BadRequest("Email is required");
+            //check duplicate email
+            var existingUser = await _context.Users
+                .AnyAsync(u => u.Email == newUser.Email);
 
-            if (Users.Any(u => u.Email == newUser.Email))
+            if (existingUser)
                 return BadRequest("Email already exists");
 
-            newUser.Id = Users.Max(u => u.Id) + 1;
-            Users.Add(newUser);
+            // Save user
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
             return Ok(newUser);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = Users.FirstOrDefault(u => u.Id == id);
+            var user = await _context.Users.FindAsync(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            Users.Remove(user);
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, User updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, User updatedUser)
         {
-            var user = Users.FirstOrDefault(u => u.Id == id);
-            if (user == null)
-                return NotFound("User not found");
+            var user = await _context.Users.FindAsync(id);
 
-            if (Users.Any(u => u.Email == updatedUser.Email && u.Id != id))
+            if (user == null)
+                return NotFound();
+
+            //check duplicate email
+            var existingEmail = await _context.Users
+                .AnyAsync(u => u.Email == updatedUser.Email && u.Id != id);
+
+            if (existingEmail)
                 return BadRequest("Email already exists");
 
-            user.Name = updatedUser.Name; 
+            user.Name = updatedUser.Name;
             user.Email = updatedUser.Email;
+            user.Password = updatedUser.Password;
+            user.Role = updatedUser.Role;
+
+            await _context.SaveChangesAsync();
 
             return Ok(user);
         }

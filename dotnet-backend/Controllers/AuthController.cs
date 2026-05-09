@@ -4,6 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using dotnet_backend.Models;
+using dotnet_backend.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace dotnet_backend.Controllers;
 
@@ -11,31 +13,39 @@ namespace dotnet_backend.Controllers;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
+    private readonly AppDbContext _context;
     private readonly IConfiguration _config;
 
-    public AuthController(IConfiguration config)
-    {
+    public AuthController(AppDbContext context, IConfiguration config)
+    { 
+        _context = context;
         _config = config;
     }
 
     [HttpPost("login")]
-    public IActionResult Login(LoginRequest request)
+    public async Task<IActionResult> Login(LoginRequest request)
     {
-        // TEMP: hardcoded user 
-        if (request.Email != "admin@test.com" || request.Password != "123456")
-            return Unauthorized("Invalid credentials");
+        var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == request.Email && u.Password == request.Password);
 
+            if (user == null)
+                return Unauthorized("Invalid credentials");
+
+            var token = GenerateJwtToken(user);
+
+            return Ok(new { token });
+    }
+
+    private string GenerateJwtToken(User user)
+    {
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, "1"),
-            new Claim(ClaimTypes.Email, request.Email),
-            new Claim(ClaimTypes.Role, "Admin")
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role)
         };
 
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_config["Jwt:Key"]!)
-        );
-
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
@@ -48,9 +58,7 @@ public class AuthController : ControllerBase
             signingCredentials: creds
         );
 
-        return Ok(new
-        {
-            token = new JwtSecurityTokenHandler().WriteToken(token)
-        });
+        return new JwtSecurityTokenHandler().WriteToken(token);    
+        
     }
 }

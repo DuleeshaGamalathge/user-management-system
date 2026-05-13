@@ -9,6 +9,7 @@
         <tr>
           <th>Name</th>
           <th>Email</th>
+          <th>Role</th>
           <th style="width: 200px;">Actions</th>
         </tr>
       </thead>
@@ -17,6 +18,7 @@
         <tr *ngFor="let user of users">
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
           <td>
             <button type="button" class="btn btn-sm btn-primary me-2"
                     (click)="editUser(user)">
@@ -88,6 +90,21 @@
     class="form-control"
     placeholder="Password"
   />
+
+  <!-- role -->
+  <input
+    type="text"
+    name="role"
+    [(ngModel)]="formUser.role"
+    required
+    #name="ngModel"
+    class="form-control"
+    placeholder="Role"
+  />
+
+  <!-- <div class="text-danger" *ngIf="role.invalid && role.touched">
+    Role is required
+  </div> -->
 
   <!-- <div class="text-danger" *ngIf="password.invalid && password.touched">
     Password is required

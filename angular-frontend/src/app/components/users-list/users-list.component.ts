@@ -29,7 +29,7 @@ export class UsersListComponent implements OnInit{
     name: '',
     email: '',
     password: '',
-    role: 'User'
+    role: ''
   };
 
   //load users

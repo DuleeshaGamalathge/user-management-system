@@ -48,6 +48,7 @@ namespace dotnet_backend.Controllers{
             return Ok(newUser);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -81,7 +82,10 @@ namespace dotnet_backend.Controllers{
 
             user.Name = updatedUser.Name;
             user.Email = updatedUser.Email;
-            user.Password = updatedUser.Password;
+            if (!string.IsNullOrWhiteSpace(updatedUser.Password))
+            {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(updatedUser.Password);
+            }
             user.Role = updatedUser.Role;
 
             await _context.SaveChangesAsync();

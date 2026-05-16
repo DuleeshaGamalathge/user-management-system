@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UserService, User } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-users-list',
@@ -11,7 +12,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './users-list.component.css'
 })
 export class UsersListComponent implements OnInit{
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    public authService: AuthService
+    ) {}
 
   //Data
   users: User[] = [];

@@ -4,13 +4,16 @@ using Microsoft.AspNetCore.Authorization;
 using dotnet_backend.Models;
 using dotnet_backend.Data;
 using Microsoft.EntityFrameworkCore;
+using dotnet_backend.DTOs;
 
 namespace dotnet_backend.Controllers{
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
+
     public class UsersController : ControllerBase
     {
+
         private readonly AppDbContext _context;
 
         public UsersController(AppDbContext context)
@@ -22,15 +25,23 @@ namespace dotnet_backend.Controllers{
         public async Task<IActionResult> GetUsers()
         {
             var users = await _context.Users.ToListAsync();
-            return Ok(users);
+
+            var userDtos = users.Select(u => new UserDto
+            {
+                Id = u.Id,
+                Name = u.Name,
+                Email = u.Email
+            });
+
+            return Ok(userDtos);
         }
         
         [HttpPost]
-        public async Task<IActionResult> CreateUser(User newUser)
+        public async Task<IActionResult> CreateUser(CreateUserDto newUser)
         {
             //validation
             if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+                return BadRequest(ModelState);
 
             //check duplicate email
             var existingUser = await _context.Users
@@ -39,13 +50,21 @@ namespace dotnet_backend.Controllers{
             if (existingUser)
                 return BadRequest("Email already exists");
 
-            // Hash password
-            newUser.Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password);
-            
+            var user = new User
+            {
+                Name = newUser.Name,
+                Email = newUser.Email,
+
+                // hashing
+                Password = BCrypt.Net.BCrypt.HashPassword(newUser.Password),
+
+                Role = newUser.Role
+            };
+
             // Save user
-            _context.Users.Add(newUser);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return Ok(newUser);
+            return Ok(user);
         }
 
         [Authorize(Roles = "Admin")]
@@ -66,7 +85,7 @@ namespace dotnet_backend.Controllers{
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, User updatedUser)
+        public async Task<IActionResult> UpdateUser(int id, UpdateUserDto updatedUser)
         {
             var user = await _context.Users.FindAsync(id);
 

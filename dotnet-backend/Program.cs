@@ -3,12 +3,14 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using dotnet_backend.Data;
 using Microsoft.EntityFrameworkCore;
+using dotnet_backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUserService, UserService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

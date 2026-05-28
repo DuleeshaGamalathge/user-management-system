@@ -172,19 +172,6 @@ Frontend runs on:
 http://localhost:4200
 ```
 
----
-
-# Screenshots
-
-## Login Page
-
-(Add screenshot here)
-
-## User Management Dashboard
-
-(Add screenshot here)
-
----
 
 # Future Improvements
 

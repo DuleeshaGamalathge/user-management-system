@@ -38,6 +38,9 @@ public class AuthController : ControllerBase
 
             if (!isPasswordValid)
                 return Unauthorized("Invalid credentials");
+
+            user.LastLoginAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
             
             var token = GenerateJwtToken(user);
 

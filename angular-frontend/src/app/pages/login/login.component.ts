@@ -32,8 +32,12 @@ export class LoginComponent {
       next: () => {
         this.router.navigate(['/users']);
       },
-      error: () => {
-        this.error = 'Invalid credentials';
+      error: (error) => {
+        if (error.status === 401) {
+          this.error = error.error;
+        } else {
+          this.error = 'Something went wrong';
+        }
       }
     });
   }

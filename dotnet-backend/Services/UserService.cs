@@ -61,7 +61,8 @@ public class UserService : IUserService
         if (user == null)
             return false;
 
-        _context.Users.Remove(user);
+        // _context.Users.Remove(user);
+        user.IsActive = false;
 
         await _context.SaveChangesAsync();
 

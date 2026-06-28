@@ -31,6 +31,11 @@ public class AuthController : ControllerBase
             if (user == null)
                 return Unauthorized("Invalid credentials");
 
+            if (!user.IsActive)
+            {
+                return Unauthorized("Account is inactive");
+            }
+
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(
                 request.Password,
                 user.Password

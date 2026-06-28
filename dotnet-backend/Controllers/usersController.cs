@@ -46,14 +46,14 @@ namespace dotnet_backend.Controllers{
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _userService.DeleteUserAsync(id);
+            var success = await _userService.DeleteUserAsync(id);
 
-            if (user == null)
+            if (!success)
             {
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok("User deactivated successfully");;
         }
 
         [HttpPut("{id}")]

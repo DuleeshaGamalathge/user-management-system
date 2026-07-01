@@ -29,10 +29,33 @@ public class AuthController : ControllerBase
                 .FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null)
+            {
+                 _context.LoginAudits.Add(new LoginAudit
+                {
+                    Email = request.Email,
+                    LoginTime = DateTime.UtcNow,
+                    IsSuccess = false,
+                    Message = "User not found"
+                });
+
+                await _context.SaveChangesAsync();
+
                 return Unauthorized("Invalid credentials");
+            }
 
             if (!user.IsActive)
             {
+                 _context.LoginAudits.Add(new LoginAudit
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    LoginTime = DateTime.UtcNow,
+                    IsSuccess = false,
+                    Message = "Account inactive"
+                });
+
+                await _context.SaveChangesAsync();
+
                 return Unauthorized("Account is inactive");
             }
 
@@ -42,9 +65,33 @@ public class AuthController : ControllerBase
             );
 
             if (!isPasswordValid)
+            {
+                _context.LoginAudits.Add(new LoginAudit
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    LoginTime = DateTime.UtcNow,
+                    IsSuccess = false,
+                    Message = "Invalid password"
+                });
+
+                await _context.SaveChangesAsync();
+
                 return Unauthorized("Invalid credentials");
+            }
 
             user.LastLoginAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            _context.LoginAudits.Add(new LoginAudit
+            {
+                UserId = user.Id,
+                Email = user.Email,
+                LoginTime = DateTime.UtcNow,
+                IsSuccess = true,
+                Message = "Login successful"
+            });
+
             await _context.SaveChangesAsync();
             
             var token = GenerateJwtToken(user);

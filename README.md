@@ -1,8 +1,10 @@
-# User Management System
+# Identity & Access Management Platform
 
 A full-stack user management application built using Angular and ASP.NET Core Web API with JWT authentication, role-based authorization, Entity Framework Core, and layered backend architecture.
 
 This project demonstrates secure authentication, CRUD operations, service-layer architecture, DTO usage, dependency injection, and SQL Server integration in a modern enterprise-style application structure.
+
+Originally developed as a User Management System and progressively enhanced with authentication, authorization, user lifecycle management, and audit logging features.
 
 ---
 

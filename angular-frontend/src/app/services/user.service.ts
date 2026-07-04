@@ -8,6 +8,9 @@ export interface User {
   email: string;
   password: string;
   role: string;
+  isActive: boolean;
+  createdAt: string;
+  lastLoginAt: string | null;
 }
 
 @Injectable({
@@ -30,8 +33,14 @@ export class UserService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  updateUser(id: number, user:User){
-    return this.http.put<User>(`${this.apiUrl}/${id}`, user);
-  }
+  updateUser(id: number, user:any){
+    const payload = {
+      name: user.name,
+      email: user.email,
+      password: user.password,
+      role: user.role
+    };
   
+    return this.http.put(`${this.apiUrl}/${id}`, payload);
+  }
 }

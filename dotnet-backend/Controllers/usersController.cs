@@ -46,7 +46,7 @@ namespace dotnet_backend.Controllers{
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var success = await _userService.DeleteUserAsync(id);
+            var success = await _userService.DeactivateUserAsync(id);
 
             if (!success)
             {
@@ -54,6 +54,18 @@ namespace dotnet_backend.Controllers{
             }
 
             return Ok("User deactivated successfully");;
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{id}/activate")]
+        public async Task<IActionResult> ActivateUser(int id)
+        {
+            var success = await _userService.ActivateUserAsync(id);
+
+            if (!success)
+                return NotFound();
+
+            return Ok("User activated successfully");
         }
 
         [HttpPut("{id}")]

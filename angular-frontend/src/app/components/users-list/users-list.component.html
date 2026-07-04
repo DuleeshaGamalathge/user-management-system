@@ -10,6 +10,9 @@
           <th>Name</th>
           <th>Email</th>
           <th>Role</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Last Login</th>
           <th style="width: 200px;">Actions</th>
         </tr>
       </thead>
@@ -17,18 +20,47 @@
       <tbody>
         <tr *ngFor="let user of users">
           <td>{{ user.name }}</td>
+
           <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
+
+          <td>
+            <span class="badge bg-primary">
+              {{user.role }}
+            </span> 
+          </td>
+
+          <td>
+            <span
+              class="badge"
+              [ngClass]="user.isActive ? 'bg-success' : 'bg-danger'">
+              {{ user.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+
+          <td>
+            {{ user.createdAt | date:'short' }}
+          </td>
+        
+          <td>
+            <span *ngIf="user.lastLoginAt; else neverLogin">
+              {{ user.lastLoginAt | date:'short' }}
+            </span>
+            <ng-template #neverLogin>
+              Never
+            </ng-template>
+          </td>
+
           <td>
             <button type="button" class="btn btn-sm btn-primary me-2"
                     (click)="editUser(user)">
               Edit
             </button>
     
-            <button type="button" class="btn btn-sm btn-danger"
-                *ngIf="authService.isAdmin()"
-                (click)="deleteUser(user.id)">
-              Deactivate
+            <button
+              *ngIf="authService.isAdmin() && user.isActive"
+              class="btn btn-sm btn-danger"
+              (click)="deleteUser(user.id)">
+                Deactivate
             </button>
           </td>
         </tr>

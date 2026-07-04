@@ -22,7 +22,11 @@ public class UserService : IUserService
         {
             Id = u.Id,
             Name = u.Name,
-            Email = u.Email
+            Email = u.Email,
+            Role = u.Role,
+            IsActive = u.IsActive,
+            CreatedAt = u.CreatedAt,
+            LastLoginAt = u.LastLoginAt
         });
     }
 
@@ -39,7 +43,9 @@ public class UserService : IUserService
             Name = dto.Name,
             Email = dto.Email,
             Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            Role = dto.Role
+            Role = dto.Role,
+            IsActive = true, 
+            CreatedAt = DateTime.UtcNow
         };
 
         _context.Users.Add(user);
@@ -50,19 +56,36 @@ public class UserService : IUserService
         {
             Id = user.Id,
             Name = user.Name,
-            Email = user.Email
+            Email = user.Email,
+            Role = user.Role,
+            IsActive = user.IsActive,
+            CreatedAt = user.CreatedAt,
+            LastLoginAt = user.LastLoginAt
         };
     }
 
-    public async Task<bool> DeleteUserAsync(int id)
+    public async Task<bool> DeactivateUserAsync(int id)
     {
         var user = await _context.Users.FindAsync(id);
 
         if (user == null)
             return false;
 
-        // _context.Users.Remove(user);
         user.IsActive = false;
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> ActivateUserAsync(int id)
+    {
+        var user = await _context.Users.FindAsync(id);
+
+        if (user == null)
+            return false;
+
+        user.IsActive = true;
 
         await _context.SaveChangesAsync();
 
@@ -98,7 +121,11 @@ public class UserService : IUserService
         {
             Id = user.Id,
             Name = user.Name,
-            Email = user.Email
+            Email = user.Email,
+            Role = user.Role,
+            IsActive = user.IsActive,
+            CreatedAt = user.CreatedAt,
+            LastLoginAt = user.LastLoginAt
         };
     }
 }

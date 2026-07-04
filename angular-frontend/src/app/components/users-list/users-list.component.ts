@@ -15,7 +15,7 @@ export class UsersListComponent implements OnInit{
   constructor(
     private userService: UserService,
     public authService: AuthService
-    ) {}
+  ) {}
 
   //Data
   users: User[] = [];
@@ -33,7 +33,10 @@ export class UsersListComponent implements OnInit{
     name: '',
     email: '',
     password: '',
-    role: ''
+    role: '',
+    isActive: true,
+    createdAt: '',
+    lastLoginAt: null
   };
 
   //load users
@@ -57,7 +60,7 @@ export class UsersListComponent implements OnInit{
   
   //delete user
   deleteUser(id: number) {
-    if (!confirm('Are you sure you want to delete this user?')) return;
+    if (!confirm('Are you sure you want to deactivate this user?')) return;
 
     this.userService.deleteUser(id).subscribe({
       next: () => {
@@ -79,7 +82,7 @@ export class UsersListComponent implements OnInit{
 
   //reset form
   cancel() {
-    this.formUser = { id: 0, name: '', email: '', password: '', role: '' };
+    this.formUser = { id: 0, name: '', email: '', password: '', role: '', isActive: true, createdAt: '', lastLoginAt: null };
     this.isEditMode = false;
   }
   
@@ -90,7 +93,10 @@ export class UsersListComponent implements OnInit{
       name: '',
       email: '',
       password: '',
-      role: ''
+      role: '',
+      isActive: true,
+      createdAt: '',
+      lastLoginAt: null
     };
     this.isEditMode = false;
   }

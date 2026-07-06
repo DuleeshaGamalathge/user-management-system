@@ -6,12 +6,25 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  password: string;
   role: string;
   isActive: boolean;
   createdAt: string;
   lastLoginAt: string | null;
 }
+
+export interface UserForm  {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
+// export interface UpdateUserRequest {
+//   name: string;
+//   email: string;
+//   password?: string;
+//   role: string;
+// }
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +38,7 @@ export class UserService {
     return this.http.get<User[]>(this.apiUrl);
   }
 
-  addUser(user: User): Observable<User> {
+  addUser(user: UserForm): Observable<User> {
     return this.http.post<User>(this.apiUrl, user);
   }
   
@@ -33,14 +46,7 @@ export class UserService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  updateUser(id: number, user:any){
-    const payload = {
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      role: user.role
-    };
-  
-    return this.http.put(`${this.apiUrl}/${id}`, payload);
+  updateUser(id: number, user:UserForm){
+    return this.http.put(`${this.apiUrl}/${id}`, user);
   }
 }

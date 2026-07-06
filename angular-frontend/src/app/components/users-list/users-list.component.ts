@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UserService, User } from '../../services/user.service';
+import { UserService, User, UserForm } from '../../services/user.service';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 
@@ -28,15 +28,13 @@ export class UsersListComponent implements OnInit{
   errorMessage = '';
 
   // define user for add | update user
-  formUser: User = {
-    id: 0,
+  editingUserId: number | null = null;
+
+  formUser: UserForm  = {
     name: '',
     email: '',
     password: '',
     role: '',
-    isActive: true,
-    createdAt: '',
-    lastLoginAt: null
   };
 
   //load users
@@ -64,7 +62,7 @@ export class UsersListComponent implements OnInit{
 
     this.userService.deleteUser(id).subscribe({
       next: () => {
-        this.users = this.users.filter(user => user.id !== id);
+        this.loadUsers();
       },
       error: (err) => {
         console.error('Delete failed', err);
@@ -75,29 +73,44 @@ export class UsersListComponent implements OnInit{
   //update user
 
   //switch form into edit mode
-  editUser(user: User) {
-    this.formUser = { ...user }; // copy, not reference
+  editUser(user: User ) {
+    this.editingUserId = user.id;
+
+    this.formUser = { 
+      name: user.name,
+      email: user.email,
+      password: '',
+      role: user.role 
+    };
+
     this.isEditMode = true;
   }
 
   //reset form
   cancel() {
-    this.formUser = { id: 0, name: '', email: '', password: '', role: '', isActive: true, createdAt: '', lastLoginAt: null };
+    this.editingUserId = null;
+
+    this.formUser = { 
+      name: '', 
+      email: '', 
+      password: '', 
+      role: '' 
+    };
+
     this.isEditMode = false;
   }
   
   //add user
   addNewUser(){
+    this.editingUserId = null;
+
     this.formUser = {
-      id: 0,
       name: '',
       email: '',
       password: '',
-      role: '',
-      isActive: true,
-      createdAt: '',
-      lastLoginAt: null
+      role: ''
     };
+
     this.isEditMode = false;
   }
   
@@ -114,7 +127,7 @@ export class UsersListComponent implements OnInit{
     this.apiError = null; // clear previous errors
   
     const request$ = this.isEditMode
-      ? this.userService.updateUser(this.formUser.id, this.formUser)
+      ? this.userService.updateUser(this.editingUserId!, this.formUser)
       : this.userService.addUser(this.formUser);
   
     request$.subscribe({

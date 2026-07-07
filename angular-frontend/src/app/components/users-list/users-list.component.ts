@@ -20,6 +20,12 @@ export class UsersListComponent implements OnInit{
   //Data
   users: User[] = [];
 
+  filteredUsers: User[] = [];
+
+  searchText = '';
+  selectedRole = '';
+  selectedStatus = '';
+
   //UI status
   isLoading = false;
   isSaving = false;
@@ -45,10 +51,33 @@ export class UsersListComponent implements OnInit{
     this.userService.getUsers().subscribe({
       next: (data) => {
         this.users = data;
+        this.filterUsers();
         this.isLoading = false;
       },
       error: (err) => console.error(err)
     });
+  }
+
+  //filter
+  filterUsers() {
+
+    this.filteredUsers = this.users.filter(user => {
+  
+      const matchesSearch =
+        user.name.toLowerCase().includes(this.searchText.toLowerCase()) ||
+        user.email.toLowerCase().includes(this.searchText.toLowerCase());
+  
+      const matchesRole =
+        !this.selectedRole ||
+        user.role === this.selectedRole;
+  
+      const matchesStatus =
+        this.selectedStatus === '' ||
+        String(user.isActive) === this.selectedStatus;
+  
+      return matchesSearch && matchesRole && matchesStatus;
+    });
+  
   }
 
   //Load users when page open

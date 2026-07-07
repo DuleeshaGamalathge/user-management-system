@@ -1,5 +1,45 @@
 <div class="container">
     <h2>Users List</h2>
+
+    <div class="row mb-3">
+
+      <div class="col-md-4">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by name or email..."
+          [(ngModel)]="searchText"
+          (input)="filterUsers()">
+      </div>
+
+      <div class="col-md-3">
+        <select
+          class="form-select"
+          [(ngModel)]="selectedRole"
+          (change)="filterUsers()">
+
+          <option value="">All Roles</option>
+          <option value="Admin">Admin</option>
+          <option value="User">User</option>
+
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <select
+          class="form-select"
+          [(ngModel)]="selectedStatus"
+          (change)="filterUsers()">
+
+          <option value="">All Status</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+
+        </select>
+      </div>
+
+    </div>
+
     <div *ngIf="isLoading" class="alert alert-info">
       Loading users...
     </div>
@@ -18,7 +58,7 @@
       </thead>
     
       <tbody>
-        <tr *ngFor="let user of users">
+        <tr *ngFor="let user of filteredUsers">
           <td>{{ user.name }}</td>
 
           <td>{{ user.email }}</td>

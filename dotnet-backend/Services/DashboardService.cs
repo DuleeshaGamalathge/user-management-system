@@ -23,7 +23,16 @@ public class DashboardService : IDashboardService
 
             InactiveUsers = await _context.Users.CountAsync(u => !u.IsActive),
 
-            AdminUsers = await _context.Users.CountAsync(u => u.Role == "Admin")
+            AdminUsers = await _context.Users.CountAsync(u => u.Role == "Admin"),
+
+            UsersByRole = await _context.Users
+            .GroupBy(u => u.Role)
+            .Select(g => new DashboardRoleSummaryDto
+            {
+                Role = g.Key,
+                UserCount = g.Count()
+            })
+            .ToListAsync()
         };
     }
 

@@ -7,6 +7,12 @@ export interface DashboardSummary {
   activeUsers: number;
   inactiveUsers: number;
   adminUsers: number;
+  usersByRole: DashboardRoleSummary[];
+}
+
+export interface DashboardRoleSummary {
+  role: string;
+  userCount: number;
 }
 
 @Injectable({

@@ -9,4 +9,8 @@ public class DashboardSummaryDto
     public int InactiveUsers { get; set; }
 
     public int AdminUsers { get; set; }
+
+    public IEnumerable<DashboardRoleSummaryDto> UsersByRole { get; set; } 
+        = new List<DashboardRoleSummaryDto>();
+
 }

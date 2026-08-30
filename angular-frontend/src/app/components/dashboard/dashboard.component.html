@@ -62,5 +62,38 @@
         </div>
   
     </div>
+
+    <!-- Users by Role -->
+    <div *ngIf="summary" class="card mt-4">
+
+        <div class="card-body">
+
+        <h5 class="card-title">Users by Role</h5>
+
+        <div style="height: 300px;">
+            <canvas #roleChart></canvas>
+        </div>
+
+        <table class="table table-bordered mt-3">
+
+            <thead>
+            <tr>
+                <th>Role</th>
+                <th>User Count</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr *ngFor="let role of summary.usersByRole">
+                <td>{{ role.role || 'Unassigned' }}</td>
+                <td>{{ role.userCount }}</td>
+            </tr>
+            </tbody>
+
+        </table>
+
+        </div>
+
+    </div>
   
 </div>

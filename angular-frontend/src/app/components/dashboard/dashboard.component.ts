@@ -23,7 +23,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild('roleChart')
   roleChartCanvas!: ElementRef<HTMLCanvasElement>;
 
+  @ViewChild('statusChart')
+  statusChartCanvas!: ElementRef<HTMLCanvasElement>;
+
   private roleChart: Chart | undefined;
+  private statusChart: Chart | undefined;
 
   constructor(
     private dashboardService: DashboardService
@@ -44,6 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         setTimeout(() => {
           this.createRoleChart();
+          this.createStatusChart();
         });
       },
       error: (err) => {
@@ -54,6 +59,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  // Role Chart
   private createRoleChart(): void {
     if (!this.roleChartCanvas || !this.summary) {
       return;
@@ -112,8 +119,53 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Account Status Chart
+  private createStatusChart(): void {
+    if (!this.statusChartCanvas || !this.summary) {
+      return;
+    }
+  
+    const activeUsers = this.summary.activeUsers;
+    const inactiveUsers = this.summary.inactiveUsers;
+  
+    this.statusChart?.destroy();
+  
+    this.statusChart = new Chart(
+      this.statusChartCanvas.nativeElement,
+      {
+        type: 'doughnut',
+  
+        data: {
+          labels: ['Active', 'Inactive'],
+  
+          datasets: [
+            {
+              data: [activeUsers, inactiveUsers],
+              backgroundColor: [
+                '#198754',
+                '#dc3545'
+              ]
+            }
+          ]
+        },
+  
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+  
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      }
+    );
+  }
+
   ngOnDestroy(): void {
     this.roleChart?.destroy();
+    this.statusChart?.destroy();
   }
 
 }

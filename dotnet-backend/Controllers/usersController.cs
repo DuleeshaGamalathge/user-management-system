@@ -53,7 +53,7 @@ namespace dotnet_backend.Controllers{
                 return NotFound();
             }
 
-            return Ok("User deactivated successfully");;
+            return NoContent();
         }
 
         [Authorize(Roles = "Admin")]

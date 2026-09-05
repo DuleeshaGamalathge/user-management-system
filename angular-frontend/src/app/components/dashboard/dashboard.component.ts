@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { DashboardService, DashboardSummary } from '../../services/dashboard.service';
 import { CommonModule } from '@angular/common';
-import { Chart, ArcElement, Tooltip, Legend, DoughnutController } from 'chart.js';
+import { Chart, ArcElement, Tooltip, Legend, DoughnutController, LineController, LineElement, PointElement, LinearScale, CategoryScale } from 'chart.js';
 
-Chart.register( ArcElement, Tooltip, Legend, DoughnutController );
+Chart.register( ArcElement, Tooltip, Legend, DoughnutController, LineController, LineElement, PointElement, LinearScale, CategoryScale );
 
 @Component({
   selector: 'app-dashboard',
@@ -26,8 +26,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild('statusChart')
   statusChartCanvas!: ElementRef<HTMLCanvasElement>;
 
+  @ViewChild('registrationChart')
+  registrationChartCanvas!: ElementRef<HTMLCanvasElement>;
+
   private roleChart: Chart | undefined;
   private statusChart: Chart | undefined;
+  private registrationChart: Chart | undefined;
 
   constructor(
     private dashboardService: DashboardService
@@ -49,6 +53,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.createRoleChart();
           this.createStatusChart();
+          this.createRegistrationChart();
         });
       },
       error: (err) => {
@@ -163,9 +168,64 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
+  //Registration Chart
+  private createRegistrationChart(): void {
+    if (!this.registrationChartCanvas || !this.summary) {
+      return;
+    }
+  
+    const labels = this.summary.registrationsByMonth.map(item =>
+      new Date(item.period).toLocaleDateString('en-US', {
+        month: 'short',
+        year: 'numeric'
+      })
+    );
+  
+    const data = this.summary.registrationsByMonth.map(
+      item => item.userCount
+    );
+  
+    this.registrationChart?.destroy();
+  
+    this.registrationChart = new Chart(
+      this.registrationChartCanvas.nativeElement,
+      {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'New Users',
+              data: data,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              }
+            }
+          }
+        }
+      }
+    );
+  }
+
   ngOnDestroy(): void {
     this.roleChart?.destroy();
     this.statusChart?.destroy();
+    this.registrationChart?.destroy();
   }
 
 }

@@ -13,4 +13,7 @@ public class DashboardSummaryDto
     public IEnumerable<DashboardRoleSummaryDto> UsersByRole { get; set; } 
         = new List<DashboardRoleSummaryDto>();
 
+    public IEnumerable<RegistrationStatisticsDto> RegistrationsByMonth { get; set; }
+        = new List<RegistrationStatisticsDto>();
+
 }

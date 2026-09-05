@@ -19,7 +19,7 @@ public class DashboardController : ControllerBase
     private readonly IDashboardService _dashboardService;
 
     public DashboardController(IDashboardService dashboardService)
-    {
+    { 
         _dashboardService = dashboardService;
     }
 

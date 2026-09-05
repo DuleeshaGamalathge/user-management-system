@@ -8,10 +8,16 @@ export interface DashboardSummary {
   inactiveUsers: number;
   adminUsers: number;
   usersByRole: DashboardRoleSummary[];
+  registrationsByMonth: RegistrationStatistics[];
 }
 
 export interface DashboardRoleSummary {
   role: string;
+  userCount: number;
+}
+
+export interface RegistrationStatistics {
+  period: string;
   userCount: number;
 }
 

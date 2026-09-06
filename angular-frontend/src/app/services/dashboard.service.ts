@@ -9,6 +9,7 @@ export interface DashboardSummary {
   adminUsers: number;
   usersByRole: DashboardRoleSummary[];
   registrationsByMonth: RegistrationStatistics[];
+  recentLogins: RecentLogin[];
 }
 
 export interface DashboardRoleSummary {
@@ -19,6 +20,13 @@ export interface DashboardRoleSummary {
 export interface RegistrationStatistics {
   period: string;
   userCount: number;
+}
+
+export interface RecentLogin {
+  email: string;
+  loginTime: string;
+  isSuccess: boolean;
+  message: string;
 }
 
 @Injectable({

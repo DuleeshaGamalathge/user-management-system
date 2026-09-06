@@ -56,6 +56,18 @@ public class DashboardService : IDashboardService
             })
             .ToList();
 
+        var recentLogins = await _context.LoginAudits
+            .OrderByDescending(l => l.LoginTime)
+            .Take(5)
+            .Select(l => new RecentLoginDto
+            {
+                Email = l.Email,
+                LoginTime = l.LoginTime,
+                IsSuccess = l.IsSuccess,
+                Message = l.Message
+            })
+            .ToListAsync();
+
         return new DashboardSummaryDto
         {
             TotalUsers = await _context.Users.CountAsync(),
@@ -66,6 +78,9 @@ public class DashboardService : IDashboardService
 
             AdminUsers = await _context.Users.CountAsync(u => u.Role == "Admin"),
 
+            NeverLoggedInUsers = await _context.Users
+                .CountAsync(u => u.LastLoginAt == null),
+
             UsersByRole = await _context.Users
             .GroupBy(u => u.Role)
             .Select(g => new DashboardRoleSummaryDto
@@ -75,7 +90,9 @@ public class DashboardService : IDashboardService
             })
             .ToListAsync(),
 
-            RegistrationsByMonth = registrationsByMonth
+            RegistrationsByMonth = registrationsByMonth,
+
+            RecentLogins = recentLogins
         };
     }
 

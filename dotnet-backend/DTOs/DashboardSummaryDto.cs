@@ -10,10 +10,15 @@ public class DashboardSummaryDto
 
     public int AdminUsers { get; set; }
 
+    public int NeverLoggedInUsers { get; set; }
+
     public IEnumerable<DashboardRoleSummaryDto> UsersByRole { get; set; } 
         = new List<DashboardRoleSummaryDto>();
 
     public IEnumerable<RegistrationStatisticsDto> RegistrationsByMonth { get; set; }
         = new List<RegistrationStatisticsDto>();
+
+    public IEnumerable<RecentLoginDto> RecentLogins { get; set; }
+        = new List<RecentLoginDto>();
 
 }

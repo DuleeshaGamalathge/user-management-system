@@ -121,5 +121,45 @@
       
         </div>
     </div>
+
+    <!-- Recent Login Activity -->
+    <div class="card my-4 ">
+        <div class="card-body">
+            <h5 class="card-title">Recent Login Activity</h5>
+      
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                    <th>Email</th>
+                    <th>Login Time</th>
+                    <th>Status</th>
+                    <th>Message</th>
+                    </tr>
+                </thead>
+        
+                <tbody>
+                    <tr *ngFor="let login of summary?.recentLogins">
+                    <td>{{ login.email }}</td>
+        
+                    <td>
+                        {{ login.loginTime | date:'MMM d, yyyy, h:mm a' }}
+                    </td>
+        
+                    <td>
+                        <span
+                        class="badge"
+                        [ngClass]="login.isSuccess ? 'bg-success' : 'bg-danger'">
+                        {{ login.isSuccess ? 'Successful' : 'Failed' }}
+                        </span>
+                    </td>
+        
+                    <td>{{ login.message }}</td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
   
 </div>

@@ -4,6 +4,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { LoginComponent } from './pages/login/login.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { AppShellComponent } from './components/layout/app-shell/app-shell.component';
+import { ActivityComponent } from './pages/activity/activity.component';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -16,7 +17,8 @@ export const routes: Routes = [
         children: [
             { path: 'users', component: UsersListComponent},
             { path: 'dashboard', component: DashboardComponent},
-            { path: 'profile', component:ProfileComponent}
+            { path: 'profile', component:ProfileComponent},
+            { path: 'activity', component:ActivityComponent}
         ]
     },
     

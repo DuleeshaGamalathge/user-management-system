@@ -1,0 +1,29 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+      <h5>User Management</h5>
+    </div>
+  
+    <nav>
+      <a
+        routerLink="/dashboard"
+        routerLinkActive="active"
+        class="nav-link">
+        Dashboard
+      </a>
+  
+      <a
+        *ngIf="isAdmin"
+        routerLink="/users"
+        routerLinkActive="active"
+        class="nav-link">
+        Users
+      </a>
+  
+      <a
+        routerLink="/activity"
+        routerLinkActive="active"
+        class="nav-link">
+        Activity / Audit Logs
+      </a>
+    </nav>
+</div>

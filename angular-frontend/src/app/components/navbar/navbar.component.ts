@@ -17,6 +17,14 @@ export class NavbarComponent {
     private router: Router
   ) {}
 
+  get userEmail(): string | null {
+    return this.authService.getUserEmail();
+  }
+
+  get userRole(): string | null {
+    return this.authService.getUserRole();
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

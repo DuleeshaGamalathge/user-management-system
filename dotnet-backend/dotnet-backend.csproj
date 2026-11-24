@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>dotnet_backend</RootNamespace>
+    <UserSecretsId>188be34f-ab71-49bf-91e9-978f9efb031b</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -57,9 +57,16 @@ builder.Services.AddCors(options =>
 });
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
+// var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 
-builder.Services.AddAuthorization();
+var jwtKey = jwtSettings["Key"]
+    ?? throw new InvalidOperationException("JWT key is not configured.");
+
+var jwtIssuer = jwtSettings["Issuer"]
+    ?? throw new InvalidOperationException("JWT issuer is not configured.");
+
+var jwtAudience = jwtSettings["Audience"]
+    ?? throw new InvalidOperationException("JWT audience is not configured.");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -68,7 +75,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
+    // var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
 
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -76,12 +83,13 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
 });
 
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

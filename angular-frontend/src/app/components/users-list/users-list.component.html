@@ -155,14 +155,17 @@
 
   <!-- password -->
   <input
-    type="text"
+    type="password"
     name="password"
     [(ngModel)]="formUser.password"
-    required
-    #name="ngModel"
+    [required]="!isEditMode"
+    #password="ngModel"
     class="form-control"
     placeholder="Password"
   />
+  <div class="text-danger" *ngIf="password.invalid && password.touched">
+    Password is required
+  </div>
 
   <!-- role -->
   <input
@@ -206,4 +209,3 @@
   </button>
 
 </form>
-

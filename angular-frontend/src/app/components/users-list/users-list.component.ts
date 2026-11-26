@@ -167,7 +167,16 @@ export class UsersListComponent implements OnInit{
         form.resetForm();
       }, 
       error: (err) => {
-        this.apiError = err.error || 'Something went wrong';
+        if (err.error?.errors) {
+          const validationErrors = err.error.errors;
+
+          this.apiError = Object.values(validationErrors)
+            .flat()
+            .join(' ');
+        } else {
+          this.apiError = err.error?.title || 'Something went wrong';
+        }
+
         this.isSaving = false;
       }
     });
